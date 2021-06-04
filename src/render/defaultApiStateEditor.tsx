@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import DefaultApiStateIcon from './icons/defaultApiStateIcon'
-import type { Monaco } from '@monaco-editor/react'
-import type { filterNode } from '../delegate'
 import CloseIcon from './icons/closeIcon'
 import MonacoEditor from './monacoEditor'
 import classNames from 'classnames'

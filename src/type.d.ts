@@ -1,4 +1,4 @@
-type filterNode = { filterName: string; value: string | string[] }
+type filterNode = { filterName: string; value: string | string[]; logic?: boolean }
 
 type apiState = Record<string, any>
 

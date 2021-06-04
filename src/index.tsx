@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import styled from 'styled-components'
 import fetchProxy from './utils/fetchProxy'
 import diffQuery from './utils/diffQuery'
 import delegate from './delegate'
@@ -82,6 +81,7 @@ function App() {
 
 const root = document.createElement('div')
 root.className = 'fixed right-6 bottom-6 z-999'
+root.id = 'create_fixture_tampermonkey'
 document.body.appendChild(root)
 ReactDOM.render(<App />, root)
 

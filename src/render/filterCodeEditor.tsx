@@ -1,18 +1,15 @@
 import type { Monaco } from '@monaco-editor/react'
 import classNames from 'classnames'
 import React from 'react'
-import { filterNode } from '../delegate'
 import CloseIcon from './icons/closeIcon'
 import MenuIcon from './icons/menuIcon'
 import MonacoEditor from './monacoEditor'
+import * as generators from '../generator'
+import prettier from 'prettier/standalone'
+import plugin from 'prettier/parser-babel'
 
 type Props = {
-  data: Record<
-    string,
-    filterNode & {
-      apiState: Record<string, any>
-    }
-  >
+  data: filterMap
 }
 
 export default function Render(props: Props) {
@@ -20,9 +17,27 @@ export default function Render(props: Props) {
 
   const [showEditor, setShowEditor] = React.useState(false)
 
-  function onClose() {
+  const onClose = () => {
     setShowEditor(false)
   }
+
+  const onSelectComponent = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const generator = generators[e.target.value]
+
+    if (!generator) {
+      featureRef.current.setValue('// not implemented ' + e.target.value)
+      return
+    }
+    const code = prettier.format(generator.generate(props.data), {
+      parser: 'babel',
+      plugins: [plugin],
+      singleQuote: true,
+    })
+    console.log('code', code)
+
+    featureRef.current.setValue(code)
+  }
+
 
   return (
     <div>
@@ -38,36 +53,38 @@ export default function Render(props: Props) {
         <span className="absolute right-5 top-5 cursor-pointer" onClick={onClose}>
           <CloseIcon />
         </span>
-        <select className="h-8 w-52 outline-none border-gray-400 border border-solid rounded-md px-3 text-sm">
+        <select
+          className="h-8 w-52 outline-none border-gray-400 border border-solid rounded-md px-3 text-sm"
+          onChange={onSelectComponent}
+        >
           <option value=""></option>
-          <option value="CheckboxDateInputFilter">CheckboxDateInputFilter</option>
-          <option value="CheckboxDateRangeFilter">CheckboxDateRangeFilter</option>
-          <option value="CheckboxFilter">CheckboxFilter</option>
-          <option value="CheckboxGroupFilter">CheckboxGroupFilter</option>
-          <option value="CompositeRadiusSearchFilter">CompositeRadiusSearchFilter</option>
-          <option value="DateInputFilter">DateInputFilter</option>
-          <option value="DateRangeFilter">DateRangeFilter</option>
-          <option value="DateSelectFilter">DateSelectFilter</option>
-          <option value="DescWithCodeTypeaheadFilter">DescWithCodeTypeaheadFilter</option>
-          <option value="DownshiftTypeaheadFilter">DownshiftTypeaheadFilter</option>
-          <option value="MinMaxInputFilter">MinMaxInputFilter</option>
-          <option value="MinMaxPriceFilter">MinMaxPriceFilter</option>
-          <option value="MultiListFilter">MultiListFilter</option>
-          <option value="MultiSelectFilter">MultiSelectFilter</option>
-          <option value="MultiSelectWithTextInputFilter">MultiSelectWithTextInputFilter</option>
-          <option value="NestedCheckFilter">NestedCheckFilter</option>
-          <option value="NumericInputFilter">NumericInputFilter</option>
-          <option value="PartialSearchTypeaheadFilter">PartialSearchTypeaheadFilter</option>
-          <option value="RadioGroupFilter">RadioGroupFilter</option>
-          <option value="RadioGroupLogicFilter">RadioGroupLogicFilter</option>
-          <option value="RadiusSearchFilter">RadiusSearchFilter</option>
-          <option value="SingleSelectFilter">SingleSelectFilter</option>
-          <option value="TextInputFilter">TextInputFilter</option>
-          <option value="TextListFilter">TextListFilter</option>
-          <option value="TitleFilter">TitleFilter</option>
-          <option value="TokenizedTextInputFilter">TokenizedTextInputFilter</option>
-          <option value="SearchSuggestTypeaheadFilter">SearchSuggestTypeaheadFilter</option>
-          <option value="SuggestTypeaheadFilter">SuggestTypeaheadFilter</option>
+          <option value="CheckboxDateInput">CheckboxDateInput</option>
+          <option value="CheckboxDateRange">CheckboxDateRange</option>
+          <option value="Checkbox">Checkbox</option>
+          <option value="CheckboxGroup">CheckboxGroup</option>
+          <option value="CompositeRadiusSearch">CompositeRadiusSearch</option>
+          <option value="DateInput">DateInput</option>
+          <option value="DateRange">DateRange</option>
+          <option value="DateSelect">DateSelect</option>
+          <option value="DescWithCodeTypeahead">DescWithCodeTypeahead</option>
+          <option value="DownshiftTypeahead">DownshiftTypeahead</option>
+          <option value="MinMaxInput">MinMaxInput</option>
+          <option value="MinMaxPrice">MinMaxPrice</option>
+          <option value="MultiList">MultiList</option>
+          <option value="MultiSelect">MultiSelect</option>
+          <option value="MultiSelectWithTextInput">MultiSelectWithTextInput</option>
+          <option value="NestedCheck">NestedCheck</option>
+          <option value="NumericInput">NumericInput</option>
+          <option value="PartialSearchTypeahead">PartialSearchTypeahead</option>
+          <option value="RadioGroup">RadioGroup</option>
+          <option value="RadioGroupLogic">RadioGroupLogic</option>
+          <option value="RadiusSearch">RadiusSearch</option>
+          <option value="SingleSelect">SingleSelect</option>
+          <option value="TextInput">TextInput</option>
+          <option value="TextList">TextList</option>
+          <option value="TokenizedTextInput">TokenizedTextInput</option>
+          <option value="SearchSuggestTypeahead">SearchSuggestTypeahead</option>
+          <option value="SuggestTypeahead">SuggestTypeahead</option>
         </select>
         <div className="flex flex-1 py-4 justify-between">
           <MonacoEditor editorRef={featureRef} language="typescript" />
